@@ -1,6 +1,9 @@
 import 'package:books_app/pages/add_page.dart';
 import 'package:books_app/pages/home_page.dart';
+import 'package:books_app/pages/signin_page.dart';
+import 'package:books_app/pages/signup_page.dart';
 import 'package:books_app/pages/update_page.dart';
+import 'package:books_app/providers/auth.dart';
 import 'package:books_app/providers/books_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -8,8 +11,11 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => BooksProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<BooksProvider>(create: (_) => BooksProvider()),
+        ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
+      ],
       child: MyApp(),
     ),
   );
@@ -42,6 +48,14 @@ class MyApp extends StatelessWidget {
               (book) => book.id.toString() == (state.params['bookId']!));
           return UpdatePage(book: book);
         },
+      ),
+      GoRoute(
+        path: '/signup',
+        builder: (context, state) => SignupPage(),
+      ),
+      GoRoute(
+        path: '/signin',
+        builder: (context, state) => SigninPage(),
       ),
     ],
   );
